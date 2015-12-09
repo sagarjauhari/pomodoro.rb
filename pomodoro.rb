@@ -37,6 +37,11 @@ class Pomodoro
     end
   end
 
+  def display_stats
+    puts "\nYou've completed #{@pomodoro_count} full pomodoros."
+    exit 0
+  end
+
   private
 
   def run(chunk)
@@ -100,11 +105,6 @@ class Pomodoro
     end
   end
 
-  def display_stats
-    puts "\nYou've completed #{@pomodoro_count} full pomodoros."
-    exit 0
-  end
-
   def long_break_time?
     @pomodoro_count % 4 == 0
   end
@@ -114,8 +114,8 @@ class Pomodoro
   end
 end
 
-trap('INT') { display_stats }
-
 pom = Pomodoro.new(options: options)
-pom.lets_go
 
+trap('INT') { pom.display_stats }
+
+pom.lets_go
