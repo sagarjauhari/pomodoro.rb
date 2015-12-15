@@ -1,8 +1,10 @@
 #! /usr/bin/ruby
 
 require 'ostruct'
+require 'csv'
 
 POMODORO_TIME = 25 # minutes
+LOGFILE = "./pomodoro_log.csv"
 
 options = ARGV
 if options.include?('--help') || options.include?('-h')
@@ -58,31 +60,41 @@ class Pomodoro
     OpenStruct.new(
       name: 'Pomodoro',
       time: @pomodoro_time * 60,
-      message: 'Pomodoro Time is up!',
-      notifier: notifier
+      message: 'Pomodoro Time is up',
+      auto_start: false,
+      log: true
     )
   end
 
   def short_break_chunk
     OpenStruct.new(
-      :name => 'Short break',
-      :time => 5 * 60,
-      :message => 'Pomodoro Break is up!',
-      :notifier => notifier
+      name: 'Short break',
+      time: 5 * 60,
+      message: 'Pomodoro Break is up!',
+      auto_start: true,
+      log: false
     )
   end
 
   def long_break_chunk
     OpenStruct.new(
-      :name => 'Long break',
-      :time => 15 * 60,
-      :message => 'Pomodoro Break is up!',
-      :notifier => notifier
+      name: 'Long break',
+      time: 15 * 60,
+      message: 'Pomodoro Break is up!',
+      auto_start: true,
+      log: false
     )
   end
 
   def start(chunk)
-    puts "\n#{chunk.name}!"
+    unless chunk.auto_start
+      puts "\nStart next #{chunk.name}? (y)"
+      while STDIN.gets.chomp != "y"
+        puts "Start next #{chunk.name}? (y)"
+      end
+    end
+
+    puts "\nStarting #{chunk.name}!"
     puts "started: #{Time.now.strftime('%H:%M')} (duration: #{chunk.time/60}m)"
   end
 
@@ -110,7 +122,12 @@ class Pomodoro
   end
 
   def finish(chunk)
-    `#{chunk.notifier} #{chunk.message}`
+    `#{notifier} "#{chunk.message}"`
+    if chunk.log
+      File.open(LOGFILE, "a") do |file|
+        file << "\"#{Time.now.to_s}\"\n"
+      end
+    end
   end
 end
 
