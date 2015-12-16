@@ -4,6 +4,8 @@ require 'ostruct'
 require 'csv'
 
 POMODORO_TIME = 25 # minutes
+SHORT_BREAK_TIME = 5 # minutes
+LONG_BREAK_TIME = 15 # minutes
 LOGFILE = "./pomodoro_log.csv"
 
 options = ARGV
@@ -60,7 +62,7 @@ class Pomodoro
     OpenStruct.new(
       name: 'Pomodoro',
       time: @pomodoro_time * 60,
-      message: 'Pomodoro Time is up',
+      message: 'Pomodoro over',
       auto_start: false,
       log: true
     )
@@ -69,8 +71,8 @@ class Pomodoro
   def short_break_chunk
     OpenStruct.new(
       name: 'Short break',
-      time: 5 * 60,
-      message: 'Pomodoro Break is up!',
+      time: SHORT_BREAK_TIME * 60,
+      message: 'Short Break is up',
       auto_start: true,
       log: false
     )
@@ -79,8 +81,8 @@ class Pomodoro
   def long_break_chunk
     OpenStruct.new(
       name: 'Long break',
-      time: 15 * 60,
-      message: 'Pomodoro Break is up!',
+      time: LONG_BREAK_TIME * 60,
+      message: 'Long Break is up',
       auto_start: true,
       log: false
     )
@@ -94,8 +96,8 @@ class Pomodoro
       end
     end
 
-    puts "\nStarting #{chunk.name}!"
-    puts "started: #{Time.now.strftime('%H:%M')} (duration: #{chunk.time/60}m)"
+    puts "\n #{chunk.name} started: #{Time.now.strftime('%H:%M')} "\
+      "(duration: #{chunk.time/60}m)"
   end
 
   def progress(time, number_of_updates)
