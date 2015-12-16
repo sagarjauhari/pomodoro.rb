@@ -127,7 +127,7 @@ class Pomodoro
     `#{notifier} "#{chunk.message}"`
     if chunk.log
       File.open(LOGFILE, "a") do |file|
-        file << "\"#{Time.now.to_s}\"\n"
+        file << "\"#{Time.now.to_s}\"" << "," << chunk.time << "\n"
       end
     end
   end
