@@ -35,7 +35,9 @@ class BitbarPomodoro
 
   def check
     if @status == "running"
-      if DateTime.now > (DateTime.parse(@start_time) + POMODORO_TIME*60)
+      if DateTime.now > (
+        DateTime.parse(@start_time) + POMODORO_TIME/(24 * 60.0)
+      )
         stop
       else
         print_started
@@ -53,14 +55,6 @@ class BitbarPomodoro
     print_started
   end
 
-  def pause
-    puts "pausing"
-    @status = "paused"
-    @start_time = Time.now
-    write_to_file
-    print_paused
-  end
-
   def stop
     @file.truncate(0)
     print_ended
@@ -72,12 +66,13 @@ class BitbarPomodoro
   end
   
   def print_started
-    puts "🍅 "
+    start_time = DateTime.parse(@start_time).to_time
+    duration = ((Time.now - start_time)/60).floor
+    puts "🍅  #{duration}m"
     puts "---"
     puts "Pomodoro"
     puts "---"
-    puts "►  Started at #{@start_time}"
-    puts "❚❚ Pause"
+    puts "►  Started at #{start_time.strftime("%H:%M")}"
     puts "◼  Stop | color=red terminal=false bash=#{__FILE__} param2=--stop "\
       "refresh=true"
   end
@@ -89,12 +84,11 @@ class BitbarPomodoro
     puts "---"
     puts "► Start | color=green terminal=false bash=#{__FILE__} param2=--start "\
       "refresh=true"
-    puts "❚❚ Pause"
     puts "◼  Stop"
   end
 end
 
-# Parse arguments: --start, --pause, --stop
+# Parse arguments: --start, --stop
 options = OpenStruct.new
 OptionParser.new do |parser|
   parser.on('-s', '--start', 'Start pomodoro') do
@@ -103,10 +97,6 @@ OptionParser.new do |parser|
 
   parser.on('-t', '--stop', 'Stop pomodoro') do
     options.action = "stop"
-  end
-
-  parser.on('-p', '--pause', 'Pause pomodoro') do
-    options.action = "pause"
   end
 
   parser.on('-p', '--check', 'Check pomodoro') do
