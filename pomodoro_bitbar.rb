@@ -1,4 +1,11 @@
 #!/usr/local/bin/ruby
+
+# <bitbar.title>Bitbar Pomodoro</bitbar.title>
+# <bitbar.version>v1.0</bitbar.version>
+# <bitbar.author>Sagar Jauhari</bitbar.author>
+# <bitbar.author.github>sagarjauhari</bitbar.author.github>
+# <bitbar.desc>A simple pomodoro plugin for Bitbar</bitbar.desc>
+# <bitbar.dependencies>ruby</bitbar.dependencies>
 require 'optparse'
 require 'ostruct'
 require 'date'
