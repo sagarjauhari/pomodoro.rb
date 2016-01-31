@@ -72,25 +72,29 @@ class BitbarPomodoro
   end
   
   def print_started
+    puts "🍅 "
+    puts "---"
     puts "Pomodoro"
     puts "---"
-    puts "Started at #{@start_time}"
-    puts "Pause"
-    puts "Stop | color=red terminal=false bash=#{__FILE__} param2=--stop "\
+    puts "►  Started at #{@start_time}"
+    puts "❚❚ Pause"
+    puts "◼  Stop | color=red terminal=false bash=#{__FILE__} param2=--stop "\
       "refresh=true"
   end
 
   def print_ended
+    puts "🍅 "
+    puts "---"
     puts "Pomodoro"
     puts "---"
-    puts "Start | color=green terminal=false bash=#{__FILE__} param2=--start "\
+    puts "► Start | color=green terminal=false bash=#{__FILE__} param2=--start "\
       "refresh=true"
-    puts "Pause"
-    puts "Stop"
+    puts "❚❚ Pause"
+    puts "◼  Stop"
   end
 end
 
-# Parse arguments: --start, --pause
+# Parse arguments: --start, --pause, --stop
 options = OpenStruct.new
 OptionParser.new do |parser|
   parser.on('-s', '--start', 'Start pomodoro') do
@@ -103,6 +107,10 @@ OptionParser.new do |parser|
 
   parser.on('-p', '--pause', 'Pause pomodoro') do
     options.action = "pause"
+  end
+
+  parser.on('-p', '--check', 'Check pomodoro') do
+    options.action = "check"
   end
 end.parse!
 
