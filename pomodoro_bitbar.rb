@@ -7,8 +7,11 @@ require 'date'
 BITBAR_PLUGINS_FOLDER = ENV["BITBAR_PLUGINS_FOLDER"] ||
                         "~/bitbar-plugin-folder"
 
-POMODORO_TIME = 5 # minutes
+POMODORO_TIME = 25 # minutes
 TMP_FILE_PATH = "/tmp/bitbar_pomodoro.txt"
+
+# Uses terminal-notifier by default. Modify it to use something like growl
+NOTIFIER='/usr/local/bin/terminal-notifier -title "Pomodoro" -message '
 
 class BitbarPomodoro
   def initialize(options)
@@ -57,6 +60,7 @@ class BitbarPomodoro
 
   def stop
     @file.truncate(0)
+    `#{NOTIFIER} Complete!`
     print_ended
   end
 
