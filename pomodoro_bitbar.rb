@@ -1,15 +1,17 @@
 #!/usr/local/bin/ruby
 require 'optparse'
 require 'ostruct'
-require 'awesome_print'
 require 'date'
+
+# Set the bitbar plugin folder here or as an environment variable
+BITBAR_PLUGINS_FOLDER = ENV["BITBAR_PLUGINS_FOLDER"] ||
+                        "~/bitbar-plugin-folder"
 
 POMODORO_TIME = 5 # minutes
 TMP_FILE_PATH = "/tmp/bitbar_pomodoro.txt"
 
 class BitbarPomodoro
   def initialize(options)
-    ap options
     # Default to 'check' action if nothing provided
     action = options.action || "check"
 
@@ -32,7 +34,6 @@ class BitbarPomodoro
   end
 
   def check
-    puts "checking"
     if @status == "running"
       if DateTime.now > (DateTime.parse(@start_time) + POMODORO_TIME*60)
         stop
@@ -45,7 +46,6 @@ class BitbarPomodoro
   end
 
   def start
-    puts "starting"
     return if @status == "running"
     @status = "running"
     @start_time = DateTime.now.to_s
@@ -62,7 +62,6 @@ class BitbarPomodoro
   end
 
   def stop
-    puts "stopping"
     @file.truncate(0)
     print_ended
   end
@@ -73,11 +72,21 @@ class BitbarPomodoro
   end
   
   def print_started
-    puts "printing started #{@start_time}"
+    puts "Pomodoro"
+    puts "---"
+    puts "Started at #{@start_time}"
+    puts "Pause"
+    puts "Stop | color=red terminal=false bash=#{__FILE__} param2=--stop "\
+      "refresh=true"
   end
 
   def print_ended
-    puts "printing ended"
+    puts "Pomodoro"
+    puts "---"
+    puts "Start | color=green terminal=false bash=#{__FILE__} param2=--start "\
+      "refresh=true"
+    puts "Pause"
+    puts "Stop"
   end
 end
 
